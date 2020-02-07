@@ -2,6 +2,7 @@ package com.example.recyclerviewapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewClick {
 RecyclerView recyclerView;
+//ActionMode actionMode;
 List<String> moviesList;
 Toolbar toolbar;
 SwipeRefreshLayout swipeRefreshLayout;
@@ -37,6 +40,7 @@ Snackbar snackbar;
         swipeRefreshLayout=findViewById(R.id.swiperefreshlayout);
        toolbar=findViewById(R.id.toolbar);
        setSupportActionBar(toolbar);
+
         moviesList=new ArrayList<>();
         moviesList.add("hoye");
         moviesList.add("na na re...");
@@ -79,18 +83,64 @@ Snackbar snackbar;
     }
 
     @Override
-    public void onClick(int position) {
+    public void onClick(int position,View view) {
         Toast.makeText(this,moviesList.get(position),Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
-    public void onItemLongClick(int position) {
+    public void onItemLongClick(int position,View view) {
+
+            startSupportActionMode(callback);
+            view.setSelected(true);
+
+
+
+
 //      recyclerViewAdapter.notifyItemRemoved(position);
 //        moviesList.remove(position);
 
 
     }
+    ActionMode.Callback callback=new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.actioncontextual,menu);
+            mode.setTitle("ActionMode");
+            mode.setSubtitle("delshare");
+
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()){
+                case R.id.delete:
+                    Toast.makeText(MainActivity.this,"delete icon pressed",Toast.LENGTH_SHORT).show();
+                    mode.finish();
+                    return true;
+                case R.id.share:
+                    Toast.makeText(MainActivity.this,"share icon pressed",Toast.LENGTH_SHORT).show();
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+
+            }
+
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+//             actionMode=null;
+        }
+    };
 
     ItemTouchHelper.SimpleCallback simpleCallback=new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
@@ -135,8 +185,11 @@ Snackbar snackbar;
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_file,menu);
        MenuItem item= menu.findItem(R.id.search);
-        SearchView searchView= (SearchView) item.getActionView();
-        searchView.setBackgroundColor(255);
+        final SearchView searchView= (SearchView) item.getActionView();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            searchView.setBackgroundColor(getColor(R.color.black));
+
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

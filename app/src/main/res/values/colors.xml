@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#000000</color>
     <color name="colorPrimary">#40CFCF</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="white">#FCF7F7</color>
+    <color name="contextualback">#2998CA</color>
+    <color name="click">#030303</color>
+    <color name="longclick">#AA4D4646</color>
 </resources>
